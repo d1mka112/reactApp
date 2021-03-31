@@ -16,6 +16,18 @@ class Square extends React.Component {
   	}
 }*/
 
+//TODO:
+/*
+
+- Отобразите позицию для каждого хода в формате (колонка, строка) в списке истории ходов.
+- Выделите выбранный элемент в списке ходов.
+- Перепишите Board, используя вложенные циклы для создания клеток, вместо их жёсткого кодирования.
+- Добавьте переключатель, который позволит вам сортировать ходы по возрастанию или по убыванию.
+- Когда кто-то выигрывает, подсветите три клетки, которые привели к победе.
+- Когда победителя нет, покажите сообщение о том, что игра окончилась вничью.
+
+*/
+
 function Square(props) {
 		return (
 			<button 
@@ -65,6 +77,9 @@ class Game extends React.Component {
 		this.state = {
 			history: [{
 				squares: Array(9).fill(null),
+				turn: null,
+				column: null,
+				row: null,
 			}],
 			xIsNext: true,
 			stepNumber: 0,
@@ -88,9 +103,15 @@ class Game extends React.Component {
 
   		squares[i] = this.state.xIsNext ? 'X' : 'O';
 
+  		const column = i % 3;
+  		const row = (i - column)/3;
+
   		this.setState({
   			history: history.concat([{
   				squares: squares,
+  				turn: i,
+  				column: column,
+  				row: row,
   			}]),
   			xIsNext: !this.state.xIsNext,
   			stepNumber: history.length,
@@ -105,9 +126,9 @@ class Game extends React.Component {
 
   		const moves = history.map((step,move) => {
   			const desc = move ?
-  			"Move to turn #" + move :
+  			"Move to turn #" + move + " column: " + step.column + " row: " + step.row :
   			"Move to start of game";
-
+  			 				
   			return (
   				<li key = {move}>
   					<button onClick = {() => this.jumpTo(move)}>{desc}</button>
